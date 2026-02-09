@@ -5,7 +5,7 @@ class Plant:
         self.age = age
 
     def display_info(self):
-        print(f"{self.name}: {self.height}cm {self.age} days old")
+        print(f"{self.name}: {self.height}cm, {self.age} days old")
 
 
 def main():
@@ -19,5 +19,6 @@ def main():
     plant2.display_info()
     plant3.display_info()
 
-if   __name__ == "__main__":
+
+if __name__ == "__main__":
     main()
