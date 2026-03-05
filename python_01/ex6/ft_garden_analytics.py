@@ -25,7 +25,7 @@ class GardenManager:
         def get_report(self):
             return (f"Plants added: {self.plants_added},"
                     f"Total growth: {self.total_growth}cm\n"
-                    f"Plant typesL: {self.regular_count} regular, "
+                    f"Plant types: {self.regular_count} regular, "
                     f"{self.flowering_count} flowering,"
                     f"{self.prize_count} prize flowers")
 
@@ -81,6 +81,9 @@ class Plant:
         self.height += 1
         print(f"{self.name}: {self.height}cm")
 
+    def get_info(self):
+        return f"{self.name}: {self.height}cm"
+
 
 class FloweringPlant(Plant):
     def __init__(self, name, height, flower_color):
@@ -92,6 +95,19 @@ class FloweringPlant(Plant):
         bloom_status = "blooming" if self.is_blooming else "not blooming"
         return f"{
             self.name}: {
-            self.height}cm , {
-            self.flower_color} flowers ({bloom_status})"
-class P
+            self.height}cm,{
+            self.flower_color}flowers({bloom_status})"
+
+
+class PrizeFlower(FloweringPlant):
+    def __init__(self, name, height, flower_color, prize_points):
+        super().__init__(name, height, flower_color)
+        self.prize_points = prize_points
+
+    def get_info(self):
+        bloom_status = "blooming" if self.is_blooming else "not blooming"
+        return (f"{self.name}: {self.height}cm, {self.flower_color} flowers"
+                f"({bloom_status}), Prize points: {self.prize_points}")
+
+
+def main():
