@@ -1,4 +1,4 @@
-def water_plants(plants_list):
+def water_plants(plants_list: list[str | None]) -> None:
     print("Opening watering system")
     try:
         for plant in plants_list:
@@ -11,7 +11,7 @@ def water_plants(plants_list):
         print("Closing watering system (cleanup)")
 
 
-def test_watering_system():
+def test_watering_system() -> None:
     print("=== Garden Watering System ===\n")
 
     print("Testing normal watering...")

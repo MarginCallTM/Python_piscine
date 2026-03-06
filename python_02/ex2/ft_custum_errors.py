@@ -14,19 +14,23 @@ class FarmerError(GardenError):
     pass
 
 
-def check_plant(name, status):
+def check_plant(name: str, status: str) -> None:
+    if not isinstance(name, str) or not isinstance(status, str):
+        raise PlantError("Plant name and status must be a strings!")
     if status == "wilting":
         raise PlantError(f"The {name} plant is wilting!")
     if status == "dead":
         raise PlantError(f"The {name} plant is dead!")
 
 
-def check_water(tank_level):
+def check_water(tank_level: int) -> None:
+    if not isinstance(tank_level, int):
+        raise WaterError("Tank level must be a mumber!")
     if tank_level < 10:
         raise WaterError("Not enought water in the tank!")
 
 
-def test_error_types():
+def test_error_types() -> None:
     print("=== Custom Garden Errors Demo ===\n")
 
     print("Testing PlantError...")
@@ -42,7 +46,7 @@ def test_error_types():
         print(f"Caught WaterError: {error}")
 
     print("\nTesting catching all garden errors...")
-    operations = [
+    operations: list[None] = [
         lambda: check_plant("tomato", "wilting"),
         lambda: check_water(5),
     ]

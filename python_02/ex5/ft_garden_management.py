@@ -11,15 +11,15 @@ class WaterError(GardenError):
 
 
 class GardenManager:
-    def __init__(self):
-        self.plants = {}
+    def __init__(self) -> None:
+        self.plants: dict[str, dict[str, int]] = {}
 
-    def add_plant(self, name):
+    def add_plant(self, name: str) -> None:
         if not name:
             raise ValueError("Plant name cannot be empty!")
         self.plants[name] = {"water": 0, "sun": 0}
 
-    def water_plant(self):
+    def water_plant(self) -> None:
         print("Opening watering system")
         try:
             for name in self.plants:
@@ -27,7 +27,24 @@ class GardenManager:
         finally:
             print("Closing watering system (cleanup)")
 
-    def check_health(self, name, water_level, sunlight_hours):
+    def validate_inputs(
+        self, name: str, water_level: int, sunlight_hours: int
+    ) -> None:
+        if not isinstance(name, str) or not name:
+            raise ValueError("Plant name must be a non-empty string!")
+        if not isinstance(water_level, int):
+            raise ValueError(
+                f"Water level must be a number, got '{water_level}'"
+            )
+        if not isinstance(sunlight_hours, int):
+            raise ValueError(
+                f"Sunlight hours must be a number, got '{sunlight_hours}'"
+            )
+
+    def check_health(
+        self, name: str, water_level: int, sunlight_hours: int
+    ) -> str:
+        self.validate_inputs(name, water_level, sunlight_hours)
         if water_level > 10:
             raise ValueError(
                 f"Water level {water_level} is too high (max 10)"
@@ -47,7 +64,7 @@ class GardenManager:
         return f"{name}: healthy (Water: {water_level}, sun: {sunlight_hours})"
 
 
-def test_garden_management():
+def test_garden_management() -> None:
     print("=== Garden Management System ===\n")
     garden = GardenManager()
 

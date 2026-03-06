@@ -1,8 +1,11 @@
-def garden_operations(operation, user_input=None):
+def garden_operations(operation: str, user_input: str = "") -> None:
     if operation == "value":
         _ = int(user_input)
     elif operation == "zero":
-        _ = 10 / int(user_input)
+        try:
+            _ = 10 / int(user_input)
+        except ValueError:
+            print(f"'{user_input}' is not a valid number")
     elif operation == "file":
         with open(user_input) as f:
             _ = f.read()
@@ -11,7 +14,7 @@ def garden_operations(operation, user_input=None):
         _ = plants[user_input]
 
 
-def test_error_types():
+def test_error_types() -> None:
     print("=== Garden Error Types Demo ===\n")
 
     print("Testing ValueError...")
@@ -25,8 +28,8 @@ def test_error_types():
         garden_operations("zero", "0")
     except ZeroDivisionError as error:
         print(f"Caught ZeroDivisionError: {error}")
-    print()
-    print("Testing FileNotFoundError...")
+
+    print("\nTesting FileNotFoundError...")
     try:
         garden_operations("file", "missing.txt")
     except FileNotFoundError:
