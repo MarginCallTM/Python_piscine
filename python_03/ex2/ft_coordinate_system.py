@@ -12,6 +12,9 @@ class CoordinateSystem:
         if len(argv) < 4:
             print("Usage: python3 ft_coordinate_system.py <x> <y> <z>")
             return None
+        if len(argv) > 4:
+            print("Usage: python3 ft_coordinate_system.py <x> <y> <z>")
+            return None
         try:
             x = int(argv[1])
             y = int(argv[2])
@@ -30,7 +33,7 @@ class CoordinateSystem:
             x, y, z = parts
             return (int(x), int(y), int(z))
         except ValueError as e:
-            print(f"Error parsing coorfinates: {e}")
+            print(f"Error parsing coordinates: {e}")
             print(f"Error details - Type: ValueError, args: {e.args}")
             return None
 
@@ -57,9 +60,9 @@ if __name__ == "__main__":
         distance = location.calculate_distance(origin, position_from_args)
         print(
             f"Distance between {origin} and {position_from_args}: {distance}")
-    print("\nUnpacking demonstration:")
+        print("\nUnpacking demonstration:")
 
-    x, y, z = position_from_args
+        x, y, z = position_from_args
 
-    print(f"Player at x={x}, y={y}, z={z}")
-    print(f"Coordinates: X={x}, Y={y}, Z={z}")
+        print(f"Player at x={x}, y={y}, z={z}")
+        print(f"Coordinates: X={x}, Y={y}, Z={z}")
