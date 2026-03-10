@@ -1,17 +1,3 @@
-
-# Create a method who compare common achivement player
-# Compare with & All commun achivement
-
-# Create a method the find the Rare achievement
-# Compare all | achievement between all Set
-# return the lowest achievement find
-
-# Create a method that compare the common achievement in 2 set
-
-# Create a method that return the unique achievement of 1 players
-# between all the different Set
-
-
 class AchievementHunter:
 
     def __init__(self):
@@ -37,7 +23,7 @@ class AchievementHunter:
         for name, achievements in self.players.items():
             print(f"Player {name} achievements: {achievements}")
 
-    def all_unique_achievements(self): 
+    def all_unique_achievements(self):
         all_achievements = set()
         for achievement in self.players.values():
             all_achievements = all_achievements | achievement
@@ -60,7 +46,7 @@ class AchievementHunter:
                     count += 1
             if count == 1:
                 rare.add(achievement)
-        
+
         print(f"Rare achievements (1 player): {rare}\n")
 
     def compare_two_players(self, player1, player2):
@@ -77,6 +63,16 @@ class AchievementHunter:
 
         print(f"{player1} vs {player2} common: {common}\n")
 
+    def unique_to_player(self, player1, player2):
+        if player1 not in self.players:
+            print(f"Error '{player1}' is not a valid key")
+            return
+        if player2 not in self.players:
+            print(f"Error '{player2}' is not a valide key")
+            return
+        unique = self.players[player1] - self.players[player2]
+        print(f"{player1} unique: {unique}")
+
 
 if __name__ == "__main__":
 
@@ -91,3 +87,4 @@ if __name__ == "__main__":
     trophy.rare_achievements()
 
     trophy.compare_two_players("alice", "bob")
+    trophy.unique_to_player("bob", "alice")
