@@ -1,9 +1,10 @@
 import sys
+from typing import List
 
 
 class Leaderbord:
     def __init__(self) -> None:
-        self.scores = []
+        self.scores: List[int] = []
 
     def claims_args(self, argv) -> None:
         if len(sys.argv) == 1:

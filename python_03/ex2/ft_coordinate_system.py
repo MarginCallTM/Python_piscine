@@ -1,12 +1,13 @@
 import sys
 import math
+from typing import Optional, Tuple
 
 
 class CoordinateSystem:
     def __init__(self) -> None:
         pass
 
-    def claims_args(self, argv) -> None:
+    def claims_args(self, argv) -> Optional[Tuple[int, int, int]]:
         if len(argv) == 2:
             return self.parse_coordinates(argv[1])
         if len(argv) < 4:
@@ -24,10 +25,10 @@ class CoordinateSystem:
             print(f"Error: coordinates must be numbers, got {e}")
             return None
 
-    def create_position(self, x, y, z) -> tuple:
+    def create_position(self, x, y, z) -> Tuple[int, int, int]:
         return (x, y, z)
 
-    def parse_coordinates(self, coord_str) -> tuple:
+    def parse_coordinates(self, coord_str) -> Optional[Tuple[int, int, int]]:
         try:
             parts = coord_str.split(",")
             x, y, z = parts

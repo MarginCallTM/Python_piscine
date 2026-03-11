@@ -49,9 +49,47 @@ class StreamWizard:
         duration = end - start
         print(f"Processing time: {duration:.3f} seconds")
 
+    def prime_generator(self):
+        n = 2
+        while True:
+            is_prime = True
+            for i in range(2, n):
+                if n % i == 0:
+                    is_prime = False
+                    break
+            if is_prime:
+                yield n
+            n += 1
+
+    def fibonacci_generator(self):
+        a, b = 0, 1
+        while True:
+            yield a
+            a, b = b, a + b
+
+    def generator_demonstration(self, fib_count: int, prime_count: int):
+        print("\n=== Generator Demonstration ===")
+
+        fib = self.fibonacci_generator()
+        fib_numbers = []
+        for _ in range(fib_count):
+            fib_numbers.append(next(fib))
+        print(
+            f"Fibonnaci (First {fib_count}):"
+            f"{', '.join(str(n) for n in fib_numbers)}")
+
+        prime = self.prime_generator()
+        prime_numbers = []
+        for _ in range(prime_count):
+            prime_numbers.append(next(prime))
+        print(
+            f"Prime numbers (first {prime_count}):"
+            f"{', '.join(str(n) for n in prime_numbers)}")
+
 
 if __name__ == "__main__":
     print("=== Game Data Stream Processor ===\n")
     wizard = StreamWizard()
     wizard.display_events(5)
-    wizard.stream_analytics(1000000)
+    wizard.stream_analytics(100)
+    wizard.generator_demonstration(6, 8)

@@ -1,4 +1,5 @@
 import sys
+from typing import Dict, Optional
 
 
 class InventoryMaster:
@@ -6,7 +7,7 @@ class InventoryMaster:
     def __init__(self) -> None:
         pass
 
-    def parse_args(self, argv) -> dict:
+    def parse_args(self, argv) -> Optional[Dict[str, int]]:
         inventory = {}
         for arg in argv[1:]:
             parts = arg.split(":")
@@ -83,18 +84,18 @@ class InventoryMaster:
         if not inventory:
             print("Inventory is empty!")
             return
-        categories = {
+        categories: Dict[str, Dict[str, int]] = {
             "Abundant": {},
             "Moderate": {},
             "Scarce": {}
         }
         for name, quantity in inventory.items():
             if quantity >= 10:
-                categories["Abundant"][name] = quantity
+                categories["Abundant"].update({name: quantity})
             elif quantity >= 4:
-                categories["Moderate"][name] = quantity
+                categories["Moderate"].update({name: quantity})
             else:
-                categories["Scarce"][name] = quantity
+                categories["Scarce"].update({name: quantity})
 
         for category, items in categories.items():
             if items:
@@ -119,7 +120,11 @@ class InventoryMaster:
         print(f"Dictionary keys: {keys}")
         print(f"Dictionary values: {values}")
         search = input("Search an item in the inventory: ")
-        result = search in inventory
+        result = inventory.get(search)
+        if result:
+            print(f"'{search}' found: {result} units")
+        else:
+            print(f"'{search}' not found in inventory")
         print(f"Sample lookup - '{search}' in inventory: {result}")
 
 
