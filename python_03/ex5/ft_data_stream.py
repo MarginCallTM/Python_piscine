@@ -8,7 +8,7 @@ class StreamWizard:
 
     def game_event_stream(self, n):
         players = ["alice", "bob", "charlie"]
-        actions = ["Killed monster", "found treasure", "leveled up"]
+        actions = ["killed monster", "found treasure", "leveled up"]
         for i in range(n):
             yield {
                 "id": i + 1,
@@ -75,8 +75,8 @@ class StreamWizard:
         for _ in range(fib_count):
             fib_numbers.append(next(fib))
         print(
-            f"Fibonnaci (First {fib_count}):"
-            f"{', '.join(str(n) for n in fib_numbers)}")
+            f"Fibonacci sequence (first {fib_count}):"
+            f" {', '.join(str(n) for n in fib_numbers)}")
 
         prime = self.prime_generator()
         prime_numbers = []
@@ -84,7 +84,7 @@ class StreamWizard:
             prime_numbers.append(next(prime))
         print(
             f"Prime numbers (first {prime_count}):"
-            f"{', '.join(str(n) for n in prime_numbers)}")
+            f" {', '.join(str(n) for n in prime_numbers)}")
 
 
 if __name__ == "__main__":

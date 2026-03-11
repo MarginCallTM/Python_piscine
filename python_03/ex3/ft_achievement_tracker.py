@@ -87,4 +87,5 @@ if __name__ == "__main__":
     trophy.rare_achievements()
 
     trophy.compare_two_players("alice", "bob")
+    trophy.unique_to_player("alice", "bob")
     trophy.unique_to_player("bob", "alice")

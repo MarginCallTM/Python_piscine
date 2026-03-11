@@ -35,7 +35,7 @@ class CoordinateSystem:
             return (int(x), int(y), int(z))
         except ValueError as e:
             print(f"Error parsing coordinates: {e}")
-            print(f"Error details - Type: ValueError, args: {e.args}")
+            print(f"Error details - Type: ValueError, Args: {e.args}")
             return None
 
     def calculate_distance(self, point1, point2) -> float:

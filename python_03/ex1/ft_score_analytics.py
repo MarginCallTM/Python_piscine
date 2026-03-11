@@ -8,8 +8,8 @@ class Leaderbord:
 
     def claims_args(self, argv) -> None:
         if len(sys.argv) == 1:
-            print("No score provided. Usage: python3"
-                  "ft_score_analytics.py <score1> <score2> ...")
+            print("No scores provided. Usage: python3"
+                  " ft_score_analytics.py <score1> <score2> ...")
             return
         for i in argv[1:]:
             self.add_score(i)
@@ -26,10 +26,10 @@ class Leaderbord:
         print(f"Scores processed: {self.scores}")
         print(f"Total players: {len(self.scores)}")
         print(f"Total score: {sum(self.scores)}")
-        print(f"Average score: {sum(self.scores) / len(self.scores):.2f}")
+        print(f"Average score: {sum(self.scores) / len(self.scores):.1f}")
         print(f"High score: {max(self.scores)}")
         print(f"Low score: {min(self.scores)}")
-        print(f"Score Range: {max(self.scores) - min(self.scores)}")
+        print(f"Score range: {max(self.scores) - min(self.scores)}")
 
 
 if __name__ == "__main__":
