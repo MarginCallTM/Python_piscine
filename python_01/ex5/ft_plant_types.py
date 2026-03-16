@@ -55,15 +55,15 @@ def main():
 
     # Flower
     rose = Flower("Rose", 25, 30, "red")
-    #tulip = Flower("Tulip", 35, 28, "yellow")
+    # tulip = Flower("Tulip", 35, 28, "yellow")
 
     # Tree
     oak = Tree("Oak", 500, 1825, 50)
-    #pine = Tree("Pin", 800, 3650, 60)
+    # pine = Tree("Pin", 800, 3650, 60)
 
     # Vegetables
     tomato = Vegetable("Tomato", 80, 90, "summer", "vitamin C")
-    #carrot = Vegetable("Carrot", 15, 120, "fall", "vitamin A")
+    # carrot = Vegetable("Carrot", 15, 120, "fall", "vitamin A")
 
     print(rose.display_info())
     rose.bloom()
