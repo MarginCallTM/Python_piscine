@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Dict, Union, Optional
+from typing import Any
 
 
 class DataProcessor(ABC):
@@ -15,7 +15,6 @@ class DataProcessor(ABC):
         pass
 
     def format_output(self, result: str) -> str:
-
         return f"{result}"
 
 
@@ -37,9 +36,8 @@ class NumericProcessor(DataProcessor):
             total = sum(data)
             size = len(data)
             avg = total / size
-            return f"Processed {
-                len(data)} numeric values, sum={
-                sum(data)}, avg={avg}"
+            return (f"Processed {len(data)} numeric values,"
+                    f" sum={total}, avg={avg}")
 
 
 class TextProcessor(DataProcessor):
@@ -59,8 +57,8 @@ class TextProcessor(DataProcessor):
             len(data)
             tab = data.split(' ')
             count_word = len(tab)
-            return f"Processed text: {
-                len(data)} characters, {count_word} words"
+            return (f"Processed text: {len(data)}"
+                    f" characters, {count_word} words")
 
 
 class LogProcessor(DataProcessor):
@@ -71,19 +69,19 @@ class LogProcessor(DataProcessor):
         try:
             if not isinstance(data, str):
                 return False
-            if data.startswith("ERROR: ") or data.startswith("INFO: ") or data.startswith("WARNING: "):
+            if data.startswith("ERROR: ") or data.startswith(
+                    "INFO: ") or data.startswith("WARNING: "):
                 return True
         except Exception as e:
             print(f"{e}")
         return False
-       
 
     def process(self, data: Any) -> str:
         if self.validate(data):
             if data.startswith("ERROR: "):
                 return f"[ALERT] ERROR level detected {data[7:]}"
             elif data.startswith("INFO: "):
-                return f"[INFO] INFO level detected : {data[5:]}"
+                return f"[INFO] INFO level detected : {data[6:]}"
             elif data.startswith("WARNING: "):
                 return f"[WARNING] WARNING level detected {data[9:]}"
         else:
@@ -93,9 +91,8 @@ class LogProcessor(DataProcessor):
 if __name__ == "__main__":
     print("=== CODE NEXUS - DATA PROCESSOR FOUNDATION ===\n")
 
-    
     print("Initializing Numeric Processor...")
-    data = [1, 2, 3, 4 ,5]
+    data = [1, 2, 3, 4, 5]
     Nprocessor = NumericProcessor()
 
     print(f"Processing data: {data}")
@@ -103,15 +100,16 @@ if __name__ == "__main__":
     print(f"Validation: {'Numeric data verified' if result else None}")
     print(f"Output: Processed {Nprocessor.process(data)}")
 
-
     print("\nInitializing Text Processor...")
     data = "prout"
     Tprocessor = TextProcessor()
 
     print(f"Processing data:'{data}'")
     result = Tprocessor.validate(data)
-    print(f"Validation: {'Text data verified' if result else 'Text data is invalid'}")
-    print(f"Output: {Tprocessor.process(data) if result else 'Nothing to display'}")
+    text_valid = 'Text data verified' if result else 'Text data is invalid'
+    print(f"Validation: {text_valid}")
+    text_out = Tprocessor.process(data) if result else 'Nothing to display'
+    print(f"Output: {text_out}")
 
     print("\nInitializing Log Processor...")
     data = "WARNING: ffsjfjsf"
@@ -119,7 +117,8 @@ if __name__ == "__main__":
 
     print(f"Processing data: '{data}'")
     result = LProcessor.validate(data)
-    print(f"Validation: {'Log entry verified' if result else 'No ERROR founds'}")
+    validated = 'Log entry verified' if result else 'No ERROR founds'
+    print(f"Validation: {validated}")
     print(f"Output: {LProcessor.process(data)}")
 
     print("\n=== Polymorphic Processing Demo ===\n")
