@@ -130,24 +130,26 @@ class InventoryMaster:
 
 if __name__ == "__main__":
     print("=== Inventory System Analysis ===")
+    try:
+        items = InventoryMaster()
 
-    items = InventoryMaster()
+        inventory = items.parse_args(sys.argv)
 
-    inventory = items.parse_args(sys.argv)
+        if inventory is None:
+            sys.exit(1)
+        if not inventory:
+            print("Usage: item:quantity (ex: sword:1)")
+            sys.exit(1)
+        items.display_inventory_overview(inventory)
 
-    if inventory is None:
-        sys.exit(1)
-    if not inventory:
-        print("Usage: item:quantity (ex: sword:1)")
-        sys.exit(1)
-    items.display_inventory_overview(inventory)
+        items.display_detail_inventory(inventory)
 
-    items.display_detail_inventory(inventory)
+        items.inventory_statistics(inventory)
 
-    items.inventory_statistics(inventory)
+        items.categorize_inventory(inventory)
 
-    items.categorize_inventory(inventory)
+        items.management_suggestions(inventory)
 
-    items.management_suggestions(inventory)
-
-    items.dictionary_properties_demo(inventory)
+        items.dictionary_properties_demo(inventory)
+    except Exception as e:
+        print({e})
