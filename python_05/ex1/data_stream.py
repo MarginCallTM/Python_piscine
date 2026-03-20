@@ -3,8 +3,8 @@ from typing import Dict, List, Any, Optional, Union
 
 
 class DataStream(ABC):
-    def __init__(self, data_batch: list[Any]) -> None:
-        self.data_batch = data_batch
+    def __init__(self, data_batch: Optional[List[Any]] = None) -> None:
+        self.data_batch = data_batch if data_batch is not None else []
 
     @abstractmethod
     def process_batch(self, data_batch: List[Any]) -> str:
@@ -17,17 +17,17 @@ class DataStream(ABC):
         else:
             return [data for data in data_batch if criteria in data]
 
-    def get_stats(self) -> dict[str, Union[str, int, float]]:
+    def get_stats(self) -> Dict[str, Union[str, int, float]]:
         return {
             "stream_type": self.stream_type,
             "stream_name": self.stream_name,
             "stream_id": self.stream_id,
-            "batch_size": len(
-                self.data_batch)}
+            "batch_size": len(self.data_batch)}
 
 
 class SensorStream(DataStream):
-    def __init__(self, stream_id: str, data_batch: list[Any]) -> None:
+    def __init__(self, stream_id: str,
+                 data_batch: Optional[List[Any]] = None) -> None:
         super().__init__(data_batch)
         self.stream_id = stream_id
         self.stream_type = "Environmental Data"
@@ -37,7 +37,7 @@ class SensorStream(DataStream):
     def filter_data(
             self,
             data_batch: List[Any],
-            criteria: Optional[str] = None) -> List[Any]:
+            criteria: Optional[str] = None) -> str:
         tmp_alert = []
         for data in data_batch:
             value = data.split(":")
@@ -46,13 +46,12 @@ class SensorStream(DataStream):
                 if tmp_value > 50:
                     tmp_alert.append(tmp_value)
         if len(tmp_alert) > 0:
-            return (f"{len(tmp_alert)} critical sensor alerts,")
+            return f"{len(tmp_alert)} critical sensor alerts,"
         else:
             return ""
 
     def process_batch(self, data_batch: List[Any]) -> str:
         count = 0
-        avg = 0
         sum_temp = 0
         count_temp = 0
         try:
@@ -67,9 +66,11 @@ class SensorStream(DataStream):
             self.avg = avg
             self.count = count
             return (f"Sensor analysis: {count}"
-                    f" reading processed, avg temp: {avg:.1f}°C\n")
-        except ZeroDivisionError as e:
-            print(f"{e}")
+                    f" readings processed, avg temp: {avg:.1f}°C\n")
+        except ZeroDivisionError:
+            self.avg = 0.0
+            self.count = 0
+            return "Sensor analysis: no temperature data found\n"
 
     def get_stats(self) -> Dict[str, Union[str, int, float]]:
         base = super().get_stats()
@@ -78,7 +79,8 @@ class SensorStream(DataStream):
 
 
 class TransactionStream(DataStream):
-    def __init__(self, stream_id: str, data_batch: List[Any]) -> None:
+    def __init__(self, stream_id: str,
+                 data_batch: Optional[List[Any]] = None) -> None:
         super().__init__(data_batch)
         self.stream_id = stream_id
         self.stream_type = "Financial Data"
@@ -88,16 +90,16 @@ class TransactionStream(DataStream):
     def filter_data(
             self,
             data_batch: List[Any],
-            criteria: Optional[str] = None) -> List[Any]:
+            criteria: Optional[str] = None) -> str:
         tx_alert = []
         for data in data_batch:
             value = data.split(":")
             if value[0].startswith("buy") or value[0].startswith("sell"):
-                tx_value = float(value[1])
+                tx_value = int(value[1])
                 if tx_value > 500:
                     tx_alert.append(tx_value)
         if len(tx_alert) > 0:
-            return (f"{len(tx_alert)} large transaction,")
+            return f"{len(tx_alert)} large transaction,"
         else:
             return ""
 
@@ -105,14 +107,13 @@ class TransactionStream(DataStream):
         count = 0
         buy = 0
         sell = 0
-        net_flow = 0
 
         for data in data_batch:
             value = data.split(":")
             if value[0].startswith("buy"):
-                buy += float(value[1])
+                buy += int(value[1])
             elif value[0].startswith("sell"):
-                sell += float(value[1])
+                sell += int(value[1])
             count += 1
         net_flow = buy - sell
         sign = "+" if net_flow >= 0 else "-"
@@ -130,7 +131,8 @@ class TransactionStream(DataStream):
 
 
 class EventStream(DataStream):
-    def __init__(self, stream_id: str, data_batch: List[Any]) -> None:
+    def __init__(self, stream_id: str,
+                 data_batch: Optional[List[Any]] = None) -> None:
         super().__init__(data_batch)
         self.stream_id = stream_id
         self.stream_type = "System Data"
@@ -140,13 +142,13 @@ class EventStream(DataStream):
     def filter_data(
             self,
             data_batch: List[Any],
-            criteria: Optional[str] = None) -> List[Any]:
+            criteria: Optional[str] = None) -> str:
         error_alert = []
         for data in data_batch:
             if data.startswith("error"):
                 error_alert.append(data)
         if len(error_alert) > 0:
-            return (f"{len(error_alert)} critical Error log alerts,")
+            return f"{len(error_alert)} critical Error log alerts,"
         else:
             return ""
 
@@ -185,41 +187,36 @@ class StreamProcessor():
         for data in self.list_stream:
             stats = data.get_stats()
             print(
-                f"- {stats["stream_name"]}: {stats["count"]} {data.stream_label}")
+                f"- {stats['stream_name']}: {stats['count']}"
+                f" {data.stream_label}")
             lst.append(data.filter_data(data.data_batch))
         print("Stream filtering active: High-priority data only")
         print(f"Filtered results: {' '.join(lst)}")
-        
 
 
 if __name__ == "__main__":
     print("=== CODE NEXUS - POLYMORPHIC STREAM SYSTEM ===\n")
 
     print("Initializing Sensor Stream...")
-    weather = SensorStream(
-        "test00", [
-            "temp:22.5", "humidity:65", "temp:100", "temp:56", "rain:42"])
+    sensor_batch = ["temp:22.5", "humidity:65", "pressure:1013"]
+    weather = SensorStream("SENSOR_001", sensor_batch)
     print(f"Stream ID: {weather.stream_id}, Type: {weather.stream_type}")
-    print(f"Processing sensor batch: {weather.data_batch}")
-    print(f"{weather.process_batch([
-        "temp:22.5", "humidity:65", "temp:50", "temp:5", "rain:42"])}")
+    print(f"Processing sensor batch: [{', '.join(sensor_batch)}]")
+    print(weather.process_batch(sensor_batch))
 
-    print("\nInitializing Transaction Stream...")
-    tx = TransactionStream(
-        "test01", [
-            "buy:100", "sell:5000", "buy:75", "sell:200"])
+    print("Initializing Transaction Stream...")
+    tx_batch = ["buy:100", "sell:150", "buy:75"]
+    tx = TransactionStream("TRANS_001", tx_batch)
     print(f"Stream ID: {tx.stream_id}, Type: {tx.stream_type}")
-    print(f"Processing transaction batch: {tx.data_batch}")
-    print(f"{tx.process_batch([
-        "buy:100", "sell:150", "buy:5500", "sell:200"])}")
+    print(f"Processing transaction batch: [{', '.join(tx_batch)}]")
+    print(tx.process_batch(tx_batch))
 
     print("Initializing Event Stream...")
-    event = EventStream(
-        "test02", ["login", "error", "logout"]
-    )
+    event_batch = ["login", "error", "logout"]
+    event = EventStream("EVENT_001", event_batch)
     print(f"Stream ID: {event.stream_id}, Type: {event.stream_type}")
-    print(f"Processing sensor batch: {event.data_batch}")
-    print(f"{event.process_batch(["login", "error", "logout"])}")
+    print(f"Processing event batch: [{', '.join(event_batch)}]")
+    print(event.process_batch(event_batch))
 
     print("\n=== Polymorphic Stream Processing ===")
     print("Processing mixed stream types through unified interface...\n")
