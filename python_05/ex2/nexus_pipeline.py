@@ -104,8 +104,19 @@ class StreamAdapter(ProcessingPipeline):
             result = stage.process(result)
         return f"Stream summary {result}"
 
-class NexusManager():
 
+class NexusManager():
+    def __init__(self, pipline_id: str):
+        super().__init__()
+        self.add_stage(InputStage())
+        self.add_stage(TransformStage())
+        self.add_stage(OutputStage())
+    
+	def add_pipelines():
+        pass
+    
+	def process_data():
+        pass
 
 
 if __name__ == "__main__":
