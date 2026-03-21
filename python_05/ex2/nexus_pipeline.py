@@ -1,3 +1,4 @@
+import time
 from abc import ABC, abstractmethod
 from typing import Dict, List, Any, Optional, Union
 from typing import Protocol, runtime_checkable
@@ -105,18 +106,43 @@ class StreamAdapter(ProcessingPipeline):
         return f"Stream summary {result}"
 
 
-class NexusManager():
-    def __init__(self, pipline_id: str):
+class NexusManager(ProcessingPipeline):
+    def __init__(self, manager_id: str):
         super().__init__()
-        self.add_stage(InputStage())
-        self.add_stage(TransformStage())
-        self.add_stage(OutputStage())
-    
-	def add_pipelines():
-        pass
-    
-	def process_data():
-        pass
+        self.manager_id = manager_id
+        self.pipelines: Dict[str, ProcessingPipeline] = {}
+        self.records_processed: int = 0
+        self.total_time: float = 0.0
+
+    def add_pipelines(
+            self,
+            pipeline_id: str,
+            pipeline: ProcessingPipeline) -> None:
+        self.pipelines[pipeline_id] = pipeline
+
+    def process_data(self, data: Any, pipeline_id: str) -> Any:
+        start = time.time()
+        try:
+            result = self.pipelines[pipeline_id].process(data)
+            self.records_processed += 1
+            self.total_time += time.time() - start
+            return result
+        except KeyError:
+            raise ValueError(f"Pipeline '{pipeline_id}' not found.")
+
+    def get_stats(self) -> Dict[str, Any]:
+        return {
+            "manager_id": self.manager_id,
+            "records_processed": self.records_processed,
+            "total_time": round(self.total_time, 4),
+            "pipelines": list(self.pipelines.keys())
+        }
+
+    def process(self, data: Any) -> Any:
+        result = data
+        for pipeline in self.pipelines.values():
+            result = pipeline.process(result)
+        return result
 
 
 if __name__ == "__main__":
