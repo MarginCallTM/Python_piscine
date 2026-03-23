@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, List, Tuple
 
 
 class DataProcessor(ABC):
@@ -30,6 +30,7 @@ class NumericProcessor(DataProcessor):
             return True
         except Exception as e:
             print(f"{e}")
+        return False
 
     def process(self, data: Any) -> str:
         if self.validate(data):
@@ -38,6 +39,7 @@ class NumericProcessor(DataProcessor):
             avg = total / size
             return (f"Processed {len(data)} numeric values,"
                     f" sum={total}, avg={avg}")
+        return ""
 
 
 class TextProcessor(DataProcessor):
@@ -51,14 +53,15 @@ class TextProcessor(DataProcessor):
             return True
         except Exception as e:
             print(f"{e}")
+        return False
 
     def process(self, data: Any) -> str:
         if self.validate(data):
-            len(data)
             tab = data.split(' ')
             count_word = len(tab)
             return (f"Processed text: {len(data)}"
                     f" characters, {count_word} words")
+        return ""
 
 
 class LogProcessor(DataProcessor):
@@ -86,49 +89,55 @@ class LogProcessor(DataProcessor):
                 return f"[WARNING] WARNING level detected {data[9:]}"
         else:
             return "No ERROR message founds"
+        return ""
 
 
 if __name__ == "__main__":
     print("=== CODE NEXUS - DATA PROCESSOR FOUNDATION ===\n")
 
     print("Initializing Numeric Processor...")
-    data = [1, 2, 3, 4, 5]
+    num_data: List[int] = [1, 2, 3, 4, 5]
     Nprocessor = NumericProcessor()
 
-    print(f"Processing data: {data}")
-    result = Nprocessor.validate(data)
-    print(f"Validation: {'Numeric data verified' if result else None}")
-    print(f"Output: Processed {Nprocessor.process(data)}")
+    print(f"Processing data: {num_data}")
+    num_valid = Nprocessor.validate(num_data)
+    print(f"Validation: {'Numeric data verified' if num_valid else None}")
+    print(f"Output: Processed {Nprocessor.process(num_data)}")
 
     print("\nInitializing Text Processor...")
-    data = "prout"
+    text_data: str = "prout"
     Tprocessor = TextProcessor()
 
-    print(f"Processing data:'{data}'")
-    result = Tprocessor.validate(data)
-    text_valid = 'Text data verified' if result else 'Text data is invalid'
+    print(f"Processing data:'{text_data}'")
+    text_valid_bool = Tprocessor.validate(text_data)
+    text_valid = (
+        'Text data verified' if text_valid_bool else 'Text data is invalid'
+    )
     print(f"Validation: {text_valid}")
-    text_out = Tprocessor.process(data) if result else 'Nothing to display'
+    text_out = (
+        Tprocessor.process(text_data)
+        if text_valid_bool else 'Nothing to display'
+    )
     print(f"Output: {text_out}")
 
     print("\nInitializing Log Processor...")
-    data = "WARNING: ffsjfjsf"
+    log_data: str = "WARNING: ffsjfjsf"
     LProcessor = LogProcessor()
 
-    print(f"Processing data: '{data}'")
-    result = LProcessor.validate(data)
-    validated = 'Log entry verified' if result else 'No ERROR founds'
+    print(f"Processing data: '{log_data}'")
+    log_valid = LProcessor.validate(log_data)
+    validated = 'Log entry verified' if log_valid else 'No ERROR founds'
     print(f"Validation: {validated}")
-    print(f"Output: {LProcessor.process(data)}")
+    print(f"Output: {LProcessor.process(log_data)}")
 
     print("\n=== Polymorphic Processing Demo ===\n")
     print("Processing multiple data types through same interface...\n")
-    processors = [
+    processors: List[Tuple[DataProcessor, Any]] = [
         (NumericProcessor(), [1, 2, 3, 4, 5]),
         (TextProcessor(), "Hello little world"),
         (LogProcessor(), "ERROR: Connection timeout")
     ]
-    for i, (processor, data) in enumerate(processors, start=1):
-        result = processor.process(data)
-        print(f"Result {i}: {processor.format_output(result)}")
+    for i, (proc, proc_data) in enumerate(processors, start=1):
+        proc_result = proc.process(proc_data)
+        print(f"Result {i}: {proc.format_output(proc_result)}")
     print("\nFoundation systems online. Nexus ready for advanced streams.")

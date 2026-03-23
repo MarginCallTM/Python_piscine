@@ -5,13 +5,19 @@ from typing import Dict, List, Any, Optional, Union
 class DataStream(ABC):
     def __init__(self, data_batch: Optional[List[Any]] = None) -> None:
         self.data_batch = data_batch if data_batch is not None else []
+        self.stream_id: str = ""
+        self.stream_type: str = ""
+        self.stream_label: str = ""
+        self.stream_name: str = ""
 
     @abstractmethod
     def process_batch(self, data_batch: List[Any]) -> str:
         pass
 
-    def filter_data(self, data_batch: List[Any],
-                    criteria: Optional[str] = None) -> List[Any]:
+    def filter_data(
+            self,
+            data_batch: List[Any],
+            criteria: Optional[str] = None) -> Union[List[Any], str]:
         if not criteria:
             return self.data_batch
         else:
@@ -37,7 +43,7 @@ class SensorStream(DataStream):
     def filter_data(
             self,
             data_batch: List[Any],
-            criteria: Optional[str] = None) -> str:
+            criteria: Optional[str] = None) -> Union[List[Any], str]:
         tmp_alert = []
         for data in data_batch:
             value = data.split(":")
@@ -52,7 +58,7 @@ class SensorStream(DataStream):
 
     def process_batch(self, data_batch: List[Any]) -> str:
         count = 0
-        sum_temp = 0
+        sum_temp: float = 0.0
         count_temp = 0
         try:
             for data in data_batch:
@@ -90,7 +96,7 @@ class TransactionStream(DataStream):
     def filter_data(
             self,
             data_batch: List[Any],
-            criteria: Optional[str] = None) -> str:
+            criteria: Optional[str] = None) -> Union[List[Any], str]:
         tx_alert = []
         for data in data_batch:
             value = data.split(":")
@@ -142,7 +148,7 @@ class EventStream(DataStream):
     def filter_data(
             self,
             data_batch: List[Any],
-            criteria: Optional[str] = None) -> str:
+            criteria: Optional[str] = None) -> Union[List[Any], str]:
         error_alert = []
         for data in data_batch:
             if data.startswith("error"):
@@ -189,7 +195,7 @@ class StreamProcessor():
             print(
                 f"- {stats['stream_name']}: {stats['count']}"
                 f" {data.stream_label}")
-            lst.append(data.filter_data(data.data_batch))
+            lst.append(str(data.filter_data(data.data_batch)))
         print("Stream filtering active: High-priority data only")
         print(f"Filtered results: {' '.join(lst)}")
 
