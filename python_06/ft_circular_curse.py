@@ -29,3 +29,4 @@ try:
 except Exception:
     print("Circular error detected")
 print("\nCircular dependency curse avoided using late imports!")
+print("All spells processed safely!")
