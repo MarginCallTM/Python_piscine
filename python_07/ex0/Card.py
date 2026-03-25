@@ -17,8 +17,5 @@ class Card(ABC):
                 "rarity": self.rarity
                 }
 
-    def is_playable(self, available_mana: int):
-        if available_mana >= self.cost:
-            return True
-        else:
-            return False
+    def is_playable(self, available_mana: int) -> bool:
+        return available_mana >= self.cost

@@ -1,5 +1,4 @@
 from ex0.Card import Card
-from typing import Dict, List, Any, Optional, Union
 
 
 class CreatureCard(Card):
@@ -17,10 +16,18 @@ class CreatureCard(Card):
             raise ValueError("negatif int triggered")
 
     def play(self, game_state: dict):
-        pass
+        return {"card_played": self.name,
+                "mana_used": self.cost,
+                "effect": "Creature summoned to battlefield"
+                }
 
-    def attack_target(self, target):
-        pass
+    def attack_target(self, target: "CreatureCard") -> dict[str, str | int]:
+        target.health -= self.attack
+        return {"attacker": self.name,
+                "target": target.name,
+                "damage_dealt": self.attack,
+                "combat_resolved": True
+                }
 
     def get_card_info(self) -> dict[str, str | int]:
         return {"name": self.name,
