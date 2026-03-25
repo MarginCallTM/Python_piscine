@@ -1,6 +1,8 @@
 from ex0.CreatureCard import CreatureCard
 
 if __name__ == "__main__":
+    game_state = {"mana": 6, "battlefied": []}
+    
     player1 = CreatureCard("Pikachu", 5, "Common", 2, 8)
     player2 = CreatureCard("Tortank", 5, "rare", 4, 8)
 
