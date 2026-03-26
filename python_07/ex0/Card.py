@@ -8,7 +8,7 @@ class Card(ABC):
         self.rarity = rarity
 
     @abstractmethod
-    def play(self, game_state: dict):
+    def play(self, game_state: dict) -> dict:
         pass
 
     def get_card_info(self) -> dict[str, str | int]:

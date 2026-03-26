@@ -6,29 +6,31 @@ import random
 
 
 class Deck():
-    def __init__(self):
-        self.cards = []
+    def __init__(self) -> None:
+        self.cards: list[Card] = []
 
-    def add_card(self, card: Card):
+    def add_card(self, card: Card) -> None:
         self.cards.append(card)
 
-    def remove_card(self, card_name: str):
+    def remove_card(self, card_name: str) -> bool:
         for card in self.cards:
             if card.name == card_name:
                 self.cards.remove(card)
+                return True
+        return False
 
-    def shuffle(self):
+    def shuffle(self) -> None:
         random.shuffle(self.cards)
 
-    def draw_card(self):
+    def draw_card(self) -> Card | str:
         if not self.cards:
             return "Empty Deck"
         return self.cards.pop(0)
 
-    def get_deck_stats(self):
+    def get_deck_stats(self) -> dict:
         return {
             "total_cards": len(self.cards),
-            "creature": sum(
+            "creatures": sum(
                 1 for card in self.cards if isinstance(card, CreatureCard)
             ),
             "spells": sum(

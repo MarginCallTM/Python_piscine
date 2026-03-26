@@ -8,14 +8,14 @@ class CreatureCard(Card):
             cost: int,
             rarity: str,
             attack: int,
-            health: int):
+            health: int) -> None:
         super().__init__(name, cost, rarity)
         self.attack = attack
         self.health = health
         if attack <= 0 or health <= 0:
             raise ValueError("negatif int triggered")
 
-    def play(self, game_state: dict):
+    def play(self, game_state: dict) -> dict:
         game_state['mana'] -= self.cost
         return {"card_played": self.name,
                 "mana_used": self.cost,
