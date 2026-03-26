@@ -16,6 +16,7 @@ class CreatureCard(Card):
             raise ValueError("negatif int triggered")
 
     def play(self, game_state: dict):
+        game_state['mana'] -= self.cost
         return {"card_played": self.name,
                 "mana_used": self.cost,
                 "effect": "Creature summoned to battlefield"
@@ -33,6 +34,7 @@ class CreatureCard(Card):
         return {"name": self.name,
                 "cost": self.cost,
                 "rarity": self.rarity,
+                "type": "Creature",
                 "attack": self.attack,
                 "health": self.health}
 
