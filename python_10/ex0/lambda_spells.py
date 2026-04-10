@@ -50,11 +50,8 @@ if __name__ == "__main__":
     print(f"{mage_stats(wizard)}\n")
 
     print("Testing artifact sorter...")
-    print(
-        f"{
-            artifact[0]['name']} ({
-            artifact[0]['power']}) comes before {
-                artifact[1]['name']} ({
-                    artifact[1]['power']})")
+    name1, pow1 = artifact[0]['name'], artifact[0]['power']
+    name2, pow2 = artifact[1]['name'], artifact[1]['power']
+    print(f"{name1} ({pow1} power) comes before {name2} ({pow2} power)")
     print("\nTesting spell transformer...")
     print(f"{' '.join(spell_transformer(spells))}")
